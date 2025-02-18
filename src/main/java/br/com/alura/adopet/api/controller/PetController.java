@@ -1,5 +1,6 @@
 package br.com.alura.adopet.api.controller;
 
+import br.com.alura.adopet.api.dto.DadosDetalhadosPetDto;
 import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/pets")
@@ -19,15 +21,10 @@ public class PetController {
     private PetRepository repository;
 
     @GetMapping
-    public ResponseEntity<List<Pet>> listarTodosDisponiveis() {
+    public ResponseEntity<List<DadosDetalhadosPetDto>> listarTodosDisponiveis() {
         List<Pet> pets = repository.findAll();
-        List<Pet> disponiveis = new ArrayList<>();
-        for (Pet pet : pets) {
-            if (pet.getAdotado() == false) {
-                disponiveis.add(pet);
-            }
-        }
+        List<DadosDetalhadosPetDto> disponiveis = pets.stream().filter(pet -> !pet.getAdotado())
+                .map(DadosDetalhadosPetDto::new).collect(Collectors.toList());
         return ResponseEntity.ok(disponiveis);
     }
-
 }
