@@ -5,7 +5,9 @@ import br.com.alura.adopet.api.dto.ReprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
 import br.com.alura.adopet.api.exception.ValidationException;
 import br.com.alura.adopet.api.model.Adocao;
+import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.model.StatusAdocao;
+import br.com.alura.adopet.api.model.Tutor;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
 import br.com.alura.adopet.api.repository.TutorRepository;
@@ -31,30 +33,12 @@ public class AdocaoService {
     private EmailService emailService;
 
     public void solicitar(SolicitacaoAdocaoDto dto) {
-        if (petRepository.getReferenceById(dto.IdPet()).getAdotado()) {
-            throw new ValidationException("Pet já foi adotado!");
-        } else {
-            List<Adocao> adocoes = adocaoRepository.findAll();
-            for (Adocao a : adocoes) {
-                if (a.getTutor() == tutorRepository.getReferenceById(dto.IdTutor()) && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
-                    throw new ValidationException("Tutor já possui outra adoção aguardando avaliação!");
-                }
-            }
-            for (Adocao a : adocoes) {
-                if (a.getPet() == petRepository.getReferenceById(dto.IdPet()) && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
-                    throw new ValidationException("Pet já está aguardando avaliação para ser adotado!");
-                }
-            }
-            for (Adocao a : adocoes) {
-                int contador = 0;
-                if (a.getTutor() == tutorRepository.getReferenceById(dto.IdTutor()) && a.getStatus() == StatusAdocao.APROVADO) {
-                    contador++;
-                }
-                if (contador == 5) {
-                    throw new ValidationException("Tutor chegou ao limite máximo de 5 adoções!");
-                }
-            }
-        }
+
+        Pet pet = petRepository.getReferenceById(dto.IdPet());
+        Tutor tutor = tutorRepository.getReferenceById(dto.IdTutor());
+
+
+
 
         Adocao adocao = new Adocao();
         adocao.setPet(petRepository.getReferenceById(dto.IdPet()));
