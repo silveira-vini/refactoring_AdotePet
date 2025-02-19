@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ValidacaoTutorAguardandoAvaliacao {
+public class ValidacaoTutorAguardandoAvaliacao implements ValidacaoSolicitacaoAdocao {
 
     @Autowired
     AdocaoRepository adocaoRepository;

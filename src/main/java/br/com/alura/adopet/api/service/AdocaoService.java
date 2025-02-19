@@ -1,5 +1,6 @@
 package br.com.alura.adopet.api.service;
 
+import br.com.alura.adopet.api.Validation.ValidacaoSolicitacaoAdocao;
 import br.com.alura.adopet.api.dto.AprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.ReprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
@@ -30,15 +31,14 @@ public class AdocaoService {
     private TutorRepository tutorRepository;
 
     @Autowired
+    private List<ValidacaoSolicitacaoAdocao> validacoes;
+
+    @Autowired
     private EmailService emailService;
 
     public void solicitar(SolicitacaoAdocaoDto dto) {
 
-        Pet pet = petRepository.getReferenceById(dto.IdPet());
-        Tutor tutor = tutorRepository.getReferenceById(dto.IdTutor());
-
-
-
+        validacoes.forEach(v -> v.validar(dto));
 
         Adocao adocao = new Adocao();
         adocao.setPet(petRepository.getReferenceById(dto.IdPet()));
