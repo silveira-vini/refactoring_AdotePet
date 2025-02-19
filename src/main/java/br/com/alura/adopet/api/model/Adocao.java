@@ -15,30 +15,21 @@ public class Adocao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "data")
     private LocalDateTime data;
 
-    @ManyToOne
-    @JsonBackReference("tutor_adocoes")
-    @JoinColumn(name = "tutor_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tutor tutor;
 
-    @OneToOne
-    @JoinColumn(name = "pet_id")
-    @JsonManagedReference("adocao_pets")
+    @OneToOne(fetch = FetchType.LAZY)
     private Pet pet;
 
-    @Column(name = "motivo")
     private String motivo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
     private StatusAdocao status;
 
-    @Column(name = "justificativa_status")
     private String justificativaStatus;
 
     @Override
@@ -102,9 +93,7 @@ public class Adocao {
         this.status = status;
     }
 
-    public String getJustificativaStatus() {
-        return justificativaStatus;
-    }
+    public String getJustificativaStatus() { return justificativaStatus; }
 
     public void setJustificativaStatus(String justificativaStatus) {
         this.justificativaStatus = justificativaStatus;
