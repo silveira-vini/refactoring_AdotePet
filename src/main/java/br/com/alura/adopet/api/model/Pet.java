@@ -1,12 +1,15 @@
 package br.com.alura.adopet.api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
-import java.util.Objects;
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "pets")
 public class Pet {
@@ -58,67 +61,7 @@ public class Pet {
         this.adotado = false;
     }
 
-    public Pet() {
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Pet pet = (Pet) o;
-        return Objects.equals(id, pet.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public TipoPet getTipo() {
-        return tipo;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getRaca() {
-        return raca;
-    }
-
-    public Integer getIdade() {
-        return idade;
-    }
-
-    public String getCor() {
-        return cor;
-    }
-
-    public Float getPeso() {
-        return peso;
-    }
-
-    public Boolean getAdotado() {
-        return adotado;
-    }
-
-    public Abrigo getAbrigo() {
-        return abrigo;
-    }
-
-    public void setAbrigo(Abrigo abrigo) {
-        this.abrigo = abrigo;
-    }
-
-    public Adocao getAdocao() {
-        return adocao;
-    }
-
-    public void setAdocao(Adocao adocao) {
-        this.adocao = adocao;
+    public void marcarComoAdotado() {
+        this.adotado = true;
     }
 }

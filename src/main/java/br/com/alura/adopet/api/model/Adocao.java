@@ -2,10 +2,15 @@ package br.com.alura.adopet.api.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "adocoes")
 public class Adocao {
@@ -29,9 +34,6 @@ public class Adocao {
 
     private String justificativaStatus;
 
-    public Adocao() {
-    }
-
     public Adocao(Tutor tutor, Pet pet, String motivo) {
         this.tutor = tutor;
         this.pet = pet;
@@ -40,48 +42,9 @@ public class Adocao {
         this.data = LocalDateTime.now();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Adocao adocao = (Adocao) o;
-        return Objects.equals(id, adocao.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public Tutor getTutor() {
-        return tutor;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public String getMotivo() {
-        return motivo;
-    }
-
-    public StatusAdocao getStatus() {
-        return status;
-    }
-
-    public String getJustificativaStatus() { return justificativaStatus; }
-
     public void marcaComoAprovado() {
         this.status = StatusAdocao.APROVADO;
-        this.pet.setAdotado(true);
+        this.pet.marcarComoAdotado();
     }
 
     public void marcaComoReprovado(@NotBlank String justificativa) {

@@ -27,6 +27,7 @@ public class AbrigoController {
     @PostMapping
     @Transactional
     public ResponseEntity<String> cadastrar(@RequestBody @Valid Abrigo abrigo) {
+
         boolean nomeJaCadastrado = repository.existsByNome(abrigo.getNome());
         boolean telefoneJaCadastrado = repository.existsByTelefone(abrigo.getTelefone());
         boolean emailJaCadastrado = repository.existsByEmail(abrigo.getEmail());
