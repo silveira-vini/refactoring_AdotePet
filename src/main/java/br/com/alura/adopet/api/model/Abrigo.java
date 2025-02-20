@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -37,4 +38,6 @@ public class Abrigo {
     @JsonManagedReference("abrigo_pets")
     private List<Pet> pets;
 
+    @NotNull
+    private boolean ativo;
 }
