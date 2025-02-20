@@ -4,18 +4,13 @@ import br.com.alura.adopet.api.Validation.ValidacaoSolicitacaoAdocao;
 import br.com.alura.adopet.api.dto.AprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.ReprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
-import br.com.alura.adopet.api.exception.ValidationException;
 import br.com.alura.adopet.api.model.Adocao;
-import br.com.alura.adopet.api.model.Pet;
-import br.com.alura.adopet.api.model.StatusAdocao;
-import br.com.alura.adopet.api.model.Tutor;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
 import br.com.alura.adopet.api.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -40,25 +35,23 @@ public class AdocaoService {
 
         validacoes.forEach(v -> v.validar(dto));
 
-        Adocao adocao = new Adocao();
-        adocao.setPet(petRepository.getReferenceById(dto.IdPet()));
-        adocao.setTutor(tutorRepository.getReferenceById(dto.IdTutor()));
-        adocao.setData(LocalDateTime.now());
-        adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
+        var tutor = tutorRepository.getReferenceById(dto.IdTutor());
+        var pet = petRepository.getReferenceById(dto.IdPet());
+
+        Adocao adocao = new Adocao(tutor, pet, dto.motivo());
         adocaoRepository.save(adocao);
         emailService.solicitar(adocao);
     }
 
     public void aprovar(AprovacaoAdocaoDto dto) {
         Adocao adocao = adocaoRepository.getReferenceById(dto.IdAdocao());
-        adocao.setStatus(StatusAdocao.APROVADO);
+        adocao.marcaComoAprovado();
         emailService.aprovar(adocao);
     }
 
     public void reprovar(ReprovacaoAdocaoDto dto) {
         Adocao adocao = adocaoRepository.getReferenceById(dto.IdAdocao());
-        adocao.setStatus(StatusAdocao.REPROVADO);
-        adocao.setMotivo(dto.motivo());
+        adocao.marcaComoReprovado(dto.justificativa());
         emailService.reprovar(adocao);
     }
 }
