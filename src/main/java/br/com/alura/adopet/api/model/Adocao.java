@@ -81,6 +81,7 @@ public class Adocao {
 
     public void marcaComoAprovado() {
         this.status = StatusAdocao.APROVADO;
+        this.pet.setAdotado(true);
     }
 
     public void marcaComoReprovado(@NotBlank String justificativa) {

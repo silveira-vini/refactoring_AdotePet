@@ -34,6 +34,7 @@ public class Pet {
     @NotNull
     private Float peso;
 
+    @NotNull
     private Boolean adotado;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,6 +42,24 @@ public class Pet {
 
     @OneToOne(mappedBy = "pet")
     private Adocao adocao;
+
+    public Pet(@NotNull TipoPet tipo,
+               @NotBlank String nome,
+               @NotBlank String raca,
+               @NotNull Integer idade,
+               @NotBlank String cor,
+               @NotNull Float peso) {
+        this.tipo = tipo;
+        this.nome = nome;
+        this.raca = raca;
+        this.idade = idade;
+        this.cor = cor;
+        this.peso = peso;
+        this.adotado = false;
+    }
+
+    public Pet() {
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -59,64 +78,32 @@ public class Pet {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public TipoPet getTipo() {
         return tipo;
-    }
-
-    public void setTipo(TipoPet tipo) {
-        this.tipo = tipo;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public String getRaca() {
         return raca;
-    }
-
-    public void setRaca(String raca) {
-        this.raca = raca;
     }
 
     public Integer getIdade() {
         return idade;
     }
 
-    public void setIdade(Integer idade) {
-        this.idade = idade;
-    }
-
     public String getCor() {
         return cor;
-    }
-
-    public void setCor(String cor) {
-        this.cor = cor;
     }
 
     public Float getPeso() {
         return peso;
     }
 
-    public void setPeso(Float peso) {
-        this.peso = peso;
-    }
-
     public Boolean getAdotado() {
         return adotado;
-    }
-
-    public void setAdotado(Boolean adotado) {
-        this.adotado = adotado;
     }
 
     public Abrigo getAbrigo() {
