@@ -20,15 +20,15 @@ public class PetService {
 
     public ResponseEntity<List<DadosDetalhadosPetDto>> listarPetsDisponiveis() {
 
-        List<Pet> pets = petRepository.findByAdotadoFalse();
-        List<DadosDetalhadosPetDto> disponiveis = pets.stream().map(DadosDetalhadosPetDto::new)
-                .collect(Collectors.toList());
+        List<Pet> pets = petRepository.findAllByAdotadoFalse();
+        List<DadosDetalhadosPetDto> disponiveis = pets.stream()
+                .map(DadosDetalhadosPetDto::new)
+                .toList();
         return ResponseEntity.ok(disponiveis);
     }
 
     public ResponseEntity<String> cadastrarPet(@Valid CadastroPetDto dto) {
-        Pet pet = new Pet(dto.tipo(), dto.nome(), dto.raca(), dto.idade(), dto.cor(), dto.peso());
-        petRepository.save(pet);
+        petRepository.save(new Pet(dto));
         return ResponseEntity.ok("Pet cadastrado com sucesso!");
     }
 }

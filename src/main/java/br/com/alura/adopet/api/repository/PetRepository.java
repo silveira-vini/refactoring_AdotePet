@@ -9,5 +9,5 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
 
     boolean existsByAdotadoTrueAndId(Long id);
 
-    List<Pet> findByAdotadoFalse();
+    List<Pet> findAllByAdotadoFalse();
 }

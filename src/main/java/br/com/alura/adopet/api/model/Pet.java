@@ -1,6 +1,8 @@
 package br.com.alura.adopet.api.model;
 
+import br.com.alura.adopet.api.dto.petDto.CadastroPetDto;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -46,18 +48,13 @@ public class Pet {
     @OneToOne(mappedBy = "pet")
     private Adocao adocao;
 
-    public Pet(@NotNull TipoPet tipo,
-               @NotBlank String nome,
-               @NotBlank String raca,
-               @NotNull Integer idade,
-               @NotBlank String cor,
-               @NotNull Float peso) {
-        this.tipo = tipo;
-        this.nome = nome;
-        this.raca = raca;
-        this.idade = idade;
-        this.cor = cor;
-        this.peso = peso;
+    public Pet(@Valid CadastroPetDto dto) {
+        this.tipo = dto.tipo();
+        this.nome = dto.nome();
+        this.raca = dto.raca();
+        this.idade = dto.idade();
+        this.cor = dto.cor();
+        this.peso = dto.peso();
         this.adotado = false;
     }
 

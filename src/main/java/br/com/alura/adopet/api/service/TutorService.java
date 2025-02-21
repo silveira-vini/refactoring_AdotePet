@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
-
 @Service
 public class TutorService {
 
@@ -21,11 +20,11 @@ public class TutorService {
 
     public ResponseEntity<String> cadastrar(CadastroTutorDto tutorDto) {
 
-        if (verificarAbrigoExistente(tutorDto)) {
+        boolean jaExisteTutor = tutorRepository.existsByTelefoneOrEmail(tutorDto.telefone(), tutorDto.email());
+        if (jaExisteTutor) {
             return ResponseEntity.badRequest().body("Tutor já cadastrado no banco de dados");
         }
-        Tutor tutor = new Tutor(tutorDto.nome(), tutorDto.email(), tutorDto.telefone());
-        tutorRepository.save(tutor);
+        tutorRepository.save(new Tutor(tutorDto));
         return ResponseEntity.ok("Tutor cadastrado com sucesso");
     }
 
@@ -42,12 +41,6 @@ public class TutorService {
         return ResponseEntity.ok(tutorRepository.findAll().toString());
     }
 
-
-    private boolean verificarAbrigoExistente(CadastroTutorDto tutorDto) {
-        boolean telefoneJaCadastrado = tutorRepository.existsByTelefone(tutorDto.telefone());
-        boolean emailJaCadastrado = tutorRepository.existsByEmail(tutorDto.email());
-        return telefoneJaCadastrado || emailJaCadastrado;
-    }
 
     private void atualizaDadosTutor(Optional<Tutor> tutorOptional, AtualizarDadosTutorDto tutorDto) {
         Tutor tutor = tutorOptional.get();

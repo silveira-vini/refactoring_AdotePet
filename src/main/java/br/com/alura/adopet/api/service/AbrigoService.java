@@ -29,21 +29,16 @@ public class AbrigoService {
     }
 
     public ResponseEntity<String> cadastrarAbrigo(@Valid CadastroAbrigoDto abrigoDto) {
-        boolean nomeJaCadastrado = abrigoRepository.existsByNome(abrigoDto.nome());
-        boolean telefoneJaCadastrado = abrigoRepository.existsByTelefone(abrigoDto.telefone());
-        boolean emailJaCadastrado = abrigoRepository.existsByEmail(abrigoDto.email());
-
-        if (nomeJaCadastrado || telefoneJaCadastrado || emailJaCadastrado) {
+        boolean jaCadastrado = abrigoRepository.existsByNomeOrTelefoneOrEmail(abrigoDto.nome(), abrigoDto.telefone(), abrigoDto.email());
+        if (jaCadastrado) {
             return ResponseEntity.badRequest().body("Dados já cadastrados para outro abrigo!");
         } else {
-            Abrigo abrigo = new Abrigo(abrigoDto.nome(), abrigoDto.telefone(), abrigoDto.email());
-            abrigoRepository.save(abrigo);
+            abrigoRepository.save(new Abrigo(abrigoDto));
             return ResponseEntity.ok("Abrigo Cadastrado com sucesso");
         }
     }
 
     public ResponseEntity<String> listarPets(String idOuNome) {
-
         try {
             Long id = Long.parseLong(idOuNome);
             Optional<Abrigo> abrigoOptional = abrigoRepository.findById(id);
@@ -59,12 +54,15 @@ public class AbrigoService {
     public ResponseEntity<String> cadastrarPet(String idOuNome, @Valid Pet pet) {
         Optional<Abrigo> abrigoOptional = buscarAbrigoPorIdOuNome(idOuNome);
         if (abrigoOptional.isPresent()) {
-            return salvarPetNoAbrigo(pet, abrigoOptional.get());
+            Abrigo abrigo = abrigoOptional.get();
+            pet.setAbrigo(abrigo); // Associa o pet ao abrigo
+            abrigo.getPets().add(pet);
+            abrigoRepository.save(abrigo);
+            return ResponseEntity.ok("Pet cadastrado no abrigo com sucesso");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
 
     private Optional<Abrigo> buscarAbrigoPorIdOuNome(String idOuNome) {
         try {
@@ -75,13 +73,6 @@ public class AbrigoService {
         } catch (EntityNotFoundException enfe) {
             return Optional.empty();
         }
-    }
-
-    private ResponseEntity<String> salvarPetNoAbrigo(Pet pet, Abrigo abrigo) {
-        pet.setAbrigo(abrigo);
-        abrigo.getPets().add(pet);
-        abrigoRepository.save(abrigo);
-        return ResponseEntity.ok("Pet cadastrado no abrigo com sucesso");
     }
 
     private ResponseEntity<String> listarPetsDeAbrigoPresente(Optional<Abrigo> abrigoOptional) {

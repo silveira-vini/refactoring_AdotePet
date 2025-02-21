@@ -1,7 +1,9 @@
 package br.com.alura.adopet.api.model;
 
+import br.com.alura.adopet.api.dto.abrigoDto.CadastroAbrigoDto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -41,10 +43,10 @@ public class Abrigo {
     @NotNull
     private boolean ativo;
 
-    public Abrigo(@NotBlank String nome, @NotBlank String telefone, @Email @NotBlank String email) {
-        this.nome = nome;
-        this.telefone = telefone;
-        this.email = email;
+    public Abrigo(@Valid CadastroAbrigoDto abrigoDto) {
+        this.nome = abrigoDto.nome();
+        this.telefone = abrigoDto.telefone();
+        this.email = abrigoDto.email();
         this.ativo = true;
     }
 }
