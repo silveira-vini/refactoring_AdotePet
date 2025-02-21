@@ -1,6 +1,6 @@
 package br.com.alura.adopet.api.Validation;
 
-import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
+import br.com.alura.adopet.api.dto.adocaoDto.SolicitacaoAdocaoDto;
 import br.com.alura.adopet.api.exception.ValidationException;
 import br.com.alura.adopet.api.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;

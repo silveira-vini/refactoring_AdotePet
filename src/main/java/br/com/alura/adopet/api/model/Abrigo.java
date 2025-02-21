@@ -40,4 +40,11 @@ public class Abrigo {
 
     @NotNull
     private boolean ativo;
+
+    public Abrigo(@NotBlank String nome, @NotBlank String telefone, @Email @NotBlank String email) {
+        this.nome = nome;
+        this.telefone = telefone;
+        this.email = email;
+        this.ativo = true;
+    }
 }

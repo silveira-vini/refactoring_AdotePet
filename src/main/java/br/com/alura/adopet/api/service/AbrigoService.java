@@ -1,6 +1,8 @@
 package br.com.alura.adopet.api.service;
 
-import br.com.alura.adopet.api.dto.AbrigoDetalhadoDto;
+import br.com.alura.adopet.api.dto.abrigoDto.AbrigoDetalhadoDto;
+import br.com.alura.adopet.api.dto.abrigoDto.CadastroAbrigoDto;
+import br.com.alura.adopet.api.dto.petDto.DadosDetalhadosPetDto;
 import br.com.alura.adopet.api.model.Abrigo;
 import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.repository.AbrigoRepository;
@@ -26,37 +28,35 @@ public class AbrigoService {
         return ResponseEntity.ok(abrigosDetalhados);
     }
 
-    public ResponseEntity<String> cadastrarAbrigo(@Valid Abrigo abrigo) {
-        boolean nomeJaCadastrado = abrigoRepository.existsByNome(abrigo.getNome());
-        boolean telefoneJaCadastrado = abrigoRepository.existsByTelefone(abrigo.getTelefone());
-        boolean emailJaCadastrado = abrigoRepository.existsByEmail(abrigo.getEmail());
+    public ResponseEntity<String> cadastrarAbrigo(@Valid CadastroAbrigoDto abrigoDto) {
+        boolean nomeJaCadastrado = abrigoRepository.existsByNome(abrigoDto.nome());
+        boolean telefoneJaCadastrado = abrigoRepository.existsByTelefone(abrigoDto.telefone());
+        boolean emailJaCadastrado = abrigoRepository.existsByEmail(abrigoDto.email());
 
         if (nomeJaCadastrado || telefoneJaCadastrado || emailJaCadastrado) {
             return ResponseEntity.badRequest().body("Dados já cadastrados para outro abrigo!");
         } else {
+            Abrigo abrigo = new Abrigo(abrigoDto.nome(), abrigoDto.telefone(), abrigoDto.email());
             abrigoRepository.save(abrigo);
             return ResponseEntity.ok("Abrigo Cadastrado com sucesso");
         }
     }
 
-    public ResponseEntity<List<Pet>> listarPets(String idOuNome) {
+    public ResponseEntity<String> listarPets(String idOuNome) {
+
         try {
             Long id = Long.parseLong(idOuNome);
-            List<Pet> pets = abrigoRepository.getReferenceById(id).getPets();
-            return ResponseEntity.ok(pets);
-        } catch (EntityNotFoundException enfe) {
-            return ResponseEntity.notFound().build();
+            Optional<Abrigo> abrigoOptional = abrigoRepository.findById(id);
+            return listarPetsDeAbrigoPresente(abrigoOptional);
         } catch (NumberFormatException e) {
-            try {
-                List<Pet> pets = abrigoRepository.findByNome(idOuNome).getPets();
-                return ResponseEntity.ok(pets);
-            } catch (EntityNotFoundException enfe) {
-                return ResponseEntity.notFound().build();
-            }
+            Optional<Abrigo> abrigoOptional = Optional.ofNullable(abrigoRepository.findByNome(idOuNome));
+            return listarPetsDeAbrigoPresente(abrigoOptional);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    public ResponseEntity cadastrarPet(String idOuNome, @Valid Pet pet) {
+    public ResponseEntity<String> cadastrarPet(String idOuNome, @Valid Pet pet) {
         Optional<Abrigo> abrigoOptional = buscarAbrigoPorIdOuNome(idOuNome);
         if (abrigoOptional.isPresent()) {
             return salvarPetNoAbrigo(pet, abrigoOptional.get());
@@ -64,7 +64,6 @@ public class AbrigoService {
             return ResponseEntity.notFound().build();
         }
     }
-
 
 
     private Optional<Abrigo> buscarAbrigoPorIdOuNome(String idOuNome) {
@@ -83,6 +82,16 @@ public class AbrigoService {
         abrigo.getPets().add(pet);
         abrigoRepository.save(abrigo);
         return ResponseEntity.ok("Pet cadastrado no abrigo com sucesso");
+    }
+
+    private ResponseEntity<String> listarPetsDeAbrigoPresente(Optional<Abrigo> abrigoOptional) {
+        if (abrigoOptional.isPresent()) {
+            List<Pet> pets = abrigoOptional.get().getPets();
+            var petsDetalhados = pets.stream().map(DadosDetalhadosPetDto::new).toList();
+            return ResponseEntity.ok(petsDetalhados.toString());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 

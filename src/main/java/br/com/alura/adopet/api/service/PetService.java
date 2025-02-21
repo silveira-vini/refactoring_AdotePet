@@ -1,7 +1,7 @@
 package br.com.alura.adopet.api.service;
 
-import br.com.alura.adopet.api.dto.CadastroPetDto;
-import br.com.alura.adopet.api.dto.DadosDetalhadosPetDto;
+import br.com.alura.adopet.api.dto.petDto.CadastroPetDto;
+import br.com.alura.adopet.api.dto.petDto.DadosDetalhadosPetDto;
 import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.repository.PetRepository;
 import jakarta.validation.Valid;

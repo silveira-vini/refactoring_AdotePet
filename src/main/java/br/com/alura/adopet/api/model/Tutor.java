@@ -34,7 +34,11 @@ public class Tutor {
     private String email;
 
     @OneToMany(mappedBy = "tutor")
-    @JsonManagedReference("tutor_adocoes")
     private List<Adocao> adocoes;
 
+    public Tutor(String nome, String telefone, String email) {
+        this.nome = nome;
+        this.telefone = telefone;
+        this.email = email;
+    }
 }

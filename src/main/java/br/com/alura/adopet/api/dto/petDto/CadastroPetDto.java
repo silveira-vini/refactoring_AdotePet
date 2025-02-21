@@ -1,4 +1,4 @@
-package br.com.alura.adopet.api.dto;
+package br.com.alura.adopet.api.dto.petDto;
 
 
 import br.com.alura.adopet.api.model.TipoPet;

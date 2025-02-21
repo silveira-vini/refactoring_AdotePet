@@ -1,7 +1,8 @@
 package br.com.alura.adopet.api.controller;
 
-import br.com.alura.adopet.api.model.Tutor;
-import br.com.alura.adopet.api.repository.TutorRepository;
+import br.com.alura.adopet.api.dto.tutorDto.AtualizarDadosTutorDto;
+import br.com.alura.adopet.api.dto.tutorDto.CadastroTutorDto;
+import br.com.alura.adopet.api.service.TutorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,27 +14,22 @@ import org.springframework.web.bind.annotation.*;
 public class TutorController {
 
     @Autowired
-    private TutorRepository repository;
+    TutorService tutorService;
 
     @PostMapping
     @Transactional
-    public ResponseEntity<String> cadastrar(@RequestBody @Valid Tutor tutor) {
-        boolean telefoneJaCadastrado = repository.existsByTelefone(tutor.getTelefone());
-        boolean emailJaCadastrado = repository.existsByEmail(tutor.getEmail());
-
-        if (telefoneJaCadastrado || emailJaCadastrado) {
-            return ResponseEntity.badRequest().body("Dados já cadastrados para outro tutor!");
-        } else {
-            repository.save(tutor);
-            return ResponseEntity.ok().build();
-        }
+    public ResponseEntity<String> cadastrar(@RequestBody @Valid CadastroTutorDto tutorDto) {
+        return tutorService.cadastrar(tutorDto);
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<String> atualizar(@RequestBody @Valid Tutor tutor) {
-        repository.save(tutor);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> atualizar(@RequestBody @Valid AtualizarDadosTutorDto tutorDto) {
+        return tutorService.atualizar(tutorDto);
     }
 
+    @GetMapping
+    public ResponseEntity<String> listar() {
+        return tutorService.listar();
+    }
 }

@@ -1,6 +1,6 @@
 package br.com.alura.adopet.api.Validation;
 
-import br.com.alura.adopet.api.dto.SolicitacaoAdocaoDto;
+import br.com.alura.adopet.api.dto.adocaoDto.SolicitacaoAdocaoDto;
 import org.springframework.stereotype.Component;
 
 @Component
