@@ -49,4 +49,5 @@ public class Abrigo {
         this.email = abrigoDto.email();
         this.ativo = true;
     }
+
 }

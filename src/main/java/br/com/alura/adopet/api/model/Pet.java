@@ -1,11 +1,13 @@
 package br.com.alura.adopet.api.model;
 
 import br.com.alura.adopet.api.dto.petDto.CadastroPetDto;
+import br.com.alura.adopet.api.repository.AbrigoRepository;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -48,7 +50,9 @@ public class Pet {
     @OneToOne(mappedBy = "pet")
     private Adocao adocao;
 
-    public Pet(@Valid CadastroPetDto dto) {
+
+    public Pet(@Valid CadastroPetDto dto, Abrigo abrigo) {
+
         this.tipo = dto.tipo();
         this.nome = dto.nome();
         this.raca = dto.raca();
@@ -56,6 +60,7 @@ public class Pet {
         this.cor = dto.cor();
         this.peso = dto.peso();
         this.adotado = false;
+        this.abrigo = abrigo;
     }
 
     public void marcarComoAdotado() {

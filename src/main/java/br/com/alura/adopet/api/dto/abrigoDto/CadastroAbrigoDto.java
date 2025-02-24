@@ -10,5 +10,5 @@ public record CadastroAbrigoDto(
         String telefone,
         @Email
         @NotBlank
-        String email) {
+        String email)  {
 }

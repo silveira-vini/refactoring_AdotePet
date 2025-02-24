@@ -1,10 +1,5 @@
 package br.com.alura.adopet.api.dto.petDto;
 
-import br.com.alura.adopet.api.model.Pet;
+public record DadosDetalhadosPetDto(String nome, String raca, Integer idade, String cor, Float peso, String abrigo) {
 
-public record DadosDetalhadosPetDto(Long id, String nome, String raca, Integer idade, String cor, Float peso) {
-
-    public DadosDetalhadosPetDto (Pet pet) {
-        this(pet.getId(), pet.getNome(), pet.getRaca(), pet.getIdade(), pet.getCor(), pet.getPeso());
-    }
 }

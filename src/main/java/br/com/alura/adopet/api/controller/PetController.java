@@ -2,6 +2,7 @@ package br.com.alura.adopet.api.controller;
 
 import br.com.alura.adopet.api.dto.petDto.CadastroPetDto;
 import br.com.alura.adopet.api.dto.petDto.DadosDetalhadosPetDto;
+import br.com.alura.adopet.api.repository.AbrigoRepository;
 import br.com.alura.adopet.api.service.PetService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
