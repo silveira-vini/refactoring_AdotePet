@@ -3,20 +3,15 @@ package br.com.alura.adopet.api.service;
 import br.com.alura.adopet.api.dto.abrigoDto.AbrigoDetalhadoDto;
 import br.com.alura.adopet.api.dto.abrigoDto.CadastroAbrigoDto;
 import br.com.alura.adopet.api.dto.petDto.DadosDetalhadosPetDto;
-import br.com.alura.adopet.api.exception.AbrigoNaoEncontradoException;
 import br.com.alura.adopet.api.model.Abrigo;
 import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.repository.AbrigoRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +20,9 @@ public class AbrigoService {
 
     @Autowired
     private AbrigoRepository abrigoRepository;
+
+    @Autowired
+    private ListToJsonService listToJsonService;
 
     public ResponseEntity<List<AbrigoDetalhadoDto>> listarAbrigos() {
         List<Abrigo> abrigos = abrigoRepository.findByAtivoTrue();
@@ -47,31 +45,25 @@ public class AbrigoService {
         try {
             Long id = Long.parseLong(idOuNome);
             Optional<Abrigo> abrigoOptional = abrigoRepository.findById(id);
-            return listarPetsDeAbrigoPresente(abrigoOptional);
+            return listarPetsDeAbrigoEncontrado(abrigoOptional);
         } catch (NumberFormatException e) {
             Optional<Abrigo> abrigoOptional = Optional.ofNullable(abrigoRepository.findByNome(idOuNome));
-            return listarPetsDeAbrigoPresente(abrigoOptional);
+            return listarPetsDeAbrigoEncontrado(abrigoOptional);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao listar pets do abrigo");
         }
     }
 
-    private ResponseEntity<String> listarPetsDeAbrigoPresente(Optional<Abrigo> abrigoOptional) {
+    private ResponseEntity<String> listarPetsDeAbrigoEncontrado(Optional<Abrigo> abrigoOptional) {
         if (abrigoOptional.isPresent()) {
             List<Pet> pets = abrigoOptional.get().getPets();
             var petsDetalhados = pets.stream().map(p -> new DadosDetalhadosPetDto(p.getNome(),
                     p.getRaca(), p.getIdade(), p.getCor(), p.getPeso(),
                     p.getAbrigo().getNome())).toList();
-            ObjectMapper objectMapper = new ObjectMapper();
-            String body = null;
-            try {
-                body = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(petsDetalhados);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e.getMessage());
-            }
+            String body = listToJsonService.listToJson(petsDetalhados);
             return ResponseEntity.ok(body);
         } else {
-            return ResponseEntity.status(404).body ("Abrigo não encontrado");
+            return ResponseEntity.status(404).body("Abrigo não encontrado");
         }
     }
 

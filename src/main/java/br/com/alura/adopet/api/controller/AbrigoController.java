@@ -1,12 +1,10 @@
 package br.com.alura.adopet.api.controller;
 
-import br.com.alura.adopet.api.dto.petDto.DadosDetalhadosPetDto;
-import br.com.alura.adopet.api.exception.EmailValidationException;
 import br.com.alura.adopet.api.dto.abrigoDto.AbrigoDetalhadoDto;
 import br.com.alura.adopet.api.dto.abrigoDto.CadastroAbrigoDto;
+import br.com.alura.adopet.api.exception.EmailValidationException;
 import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.service.AbrigoService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

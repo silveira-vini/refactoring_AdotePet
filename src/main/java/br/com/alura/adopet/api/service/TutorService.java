@@ -2,6 +2,7 @@ package br.com.alura.adopet.api.service;
 
 import br.com.alura.adopet.api.dto.tutorDto.AtualizarDadosTutorDto;
 import br.com.alura.adopet.api.dto.tutorDto.CadastroTutorDto;
+import br.com.alura.adopet.api.dto.tutorDto.DadosDetalhadosTutorDto;
 import br.com.alura.adopet.api.model.Tutor;
 import br.com.alura.adopet.api.repository.TutorRepository;
 import jakarta.validation.Valid;
@@ -17,6 +18,9 @@ public class TutorService {
 
     @Autowired
     private TutorRepository tutorRepository;
+
+    @Autowired
+    private ListToJsonService listToJsonService;
 
     public ResponseEntity<String> cadastrar(CadastroTutorDto tutorDto) {
 
@@ -38,7 +42,10 @@ public class TutorService {
     }
 
     public ResponseEntity<String> listar() {
-        return ResponseEntity.ok(tutorRepository.findAll().toString());
+        var tutores = tutorRepository.findAll().stream().
+                map(t -> new DadosDetalhadosTutorDto(t.getNome(), t.getTelefone(), t.getEmail())).toList();
+        var body = listToJsonService.listToJson(tutores);
+        return ResponseEntity.ok(body);
     }
 
 
