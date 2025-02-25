@@ -43,8 +43,8 @@ public class TutorService {
 
     public ResponseEntity<String> listar() {
         var tutores = tutorRepository.findAll().stream().
-                map(t -> new DadosDetalhadosTutorDto(t.getNome(), t.getTelefone(), t.getEmail())).toList();
-        var body = listToJsonService.listToJson(tutores);
+                map(t -> new DadosDetalhadosTutorDto(t.getId(), t.getNome(), t.getTelefone(), t.getEmail())).toList();
+        var body = listToJsonService.convert(tutores);
         return ResponseEntity.ok(body);
     }
 

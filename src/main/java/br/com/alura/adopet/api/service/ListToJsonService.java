@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public class ListToJsonService {
-    public String listToJson(List<?> list) {
+    public String convert(List<?> list) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(list);

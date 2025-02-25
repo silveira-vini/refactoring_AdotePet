@@ -27,7 +27,7 @@ public class PetService {
 
         List<Pet> pets = petRepository.findAllByAdotadoFalse();
         List<DadosDetalhadosPetDto> disponiveis = pets.stream()
-                .map(p -> new DadosDetalhadosPetDto(p.getNome(),
+                .map(p -> new DadosDetalhadosPetDto(p.getId() ,p.getNome(),
                         p.getRaca(), p.getIdade(), p.getCor(), p.getPeso(),
                         p.getAbrigo().getNome()))
                 .toList();

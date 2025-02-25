@@ -57,10 +57,10 @@ public class AbrigoService {
     private ResponseEntity<String> listarPetsDeAbrigoEncontrado(Optional<Abrigo> abrigoOptional) {
         if (abrigoOptional.isPresent()) {
             List<Pet> pets = abrigoOptional.get().getPets();
-            var petsDetalhados = pets.stream().map(p -> new DadosDetalhadosPetDto(p.getNome(),
+            var petsDetalhados = pets.stream().map(p -> new DadosDetalhadosPetDto(p.getId() ,p.getNome(),
                     p.getRaca(), p.getIdade(), p.getCor(), p.getPeso(),
                     p.getAbrigo().getNome())).toList();
-            String body = listToJsonService.listToJson(petsDetalhados);
+            String body = listToJsonService.convert(petsDetalhados);
             return ResponseEntity.ok(body);
         } else {
             return ResponseEntity.status(404).body("Abrigo não encontrado");

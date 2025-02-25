@@ -2,6 +2,7 @@ package br.com.alura.adopet.api.service;
 
 import br.com.alura.adopet.api.Validation.ValidacaoSolicitacaoAdocao;
 import br.com.alura.adopet.api.dto.adocaoDto.AprovacaoAdocaoDto;
+import br.com.alura.adopet.api.dto.adocaoDto.DadosDetalhadosAdocaoDto;
 import br.com.alura.adopet.api.dto.adocaoDto.ReprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.adocaoDto.SolicitacaoAdocaoDto;
 import br.com.alura.adopet.api.model.Adocao;
@@ -31,6 +32,9 @@ public class AdocaoService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private ListToJsonService listToJsonService;
+
     public void solicitar(SolicitacaoAdocaoDto dto) {
 
         validacoes.forEach(v -> v.validar(dto));
@@ -41,6 +45,20 @@ public class AdocaoService {
         Adocao adocao = new Adocao(tutor, pet, dto.motivo());
         adocaoRepository.save(adocao);
         emailService.solicitar(adocao);
+    }
+
+    public String listar() {
+        List<Adocao> adocoes = adocaoRepository.findAll();
+        var listAdocoes = adocoes.stream()
+                .map(a -> new DadosDetalhadosAdocaoDto(a.getId(),
+                        a.getData().toString(),
+                        a.getTutor().getNome(),
+                        a.getPet().getNome(),
+                        a.getMotivo(),
+                        a.getStatus().toString(),
+                        a.getJustificativaStatus() == null ? "-" : a.getJustificativaStatus()))
+                .toList();
+        return listToJsonService.convert(listAdocoes);
     }
 
     public void aprovar(AprovacaoAdocaoDto dto) {
