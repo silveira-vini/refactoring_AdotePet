@@ -1,6 +1,6 @@
 package br.com.alura.adopet.api.service;
 
-import br.com.alura.adopet.api.Validation.ValidacaoSolicitacaoAdocao;
+import br.com.alura.adopet.api.validation.ValidacaoSolicitacaoAdocao;
 import br.com.alura.adopet.api.dto.adocaoDto.AprovacaoAdocaoDto;
 import br.com.alura.adopet.api.dto.adocaoDto.DadosDetalhadosAdocaoDto;
 import br.com.alura.adopet.api.dto.adocaoDto.ReprovacaoAdocaoDto;
@@ -9,11 +9,14 @@ import br.com.alura.adopet.api.model.Adocao;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
 import br.com.alura.adopet.api.repository.PetRepository;
 import br.com.alura.adopet.api.repository.TutorRepository;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Setter
 @Service
 public class AdocaoService {
 

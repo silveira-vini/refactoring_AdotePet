@@ -1,26 +1,28 @@
-package br.com.alura.adopet.api.Validation;
+package br.com.alura.adopet.api.validation;
 
 import br.com.alura.adopet.api.dto.adocaoDto.SolicitacaoAdocaoDto;
 import br.com.alura.adopet.api.exception.ValidationException;
 import br.com.alura.adopet.api.model.StatusAdocao;
 import br.com.alura.adopet.api.repository.AdocaoRepository;
+import br.com.alura.adopet.api.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidacaoPetComAdocaoEmAndamento implements ValidacaoSolicitacaoAdocao {
+public class ValidacaoTutorLimiteAdocoes implements ValidacaoSolicitacaoAdocao {
 
     @Autowired
     AdocaoRepository adocaoRepository;
 
+    @Autowired
+    TutorRepository tutorRepository;
+
     public void validar(SolicitacaoAdocaoDto dto) {
 
-        boolean petAguardandoAvaliacao = adocaoRepository.existsByPetIdAndStatus(dto.IdPet(),
-                StatusAdocao.AGUARDANDO_AVALIACAO);
+        long contagem = adocaoRepository.countByTutorIdAndStatus(dto.IdTutor(), StatusAdocao.APROVADO);
 
-        if (petAguardandoAvaliacao) {
-            throw new ValidationException("Pet já está aguardando avaliação para ser adotado!");
+        if(contagem >= 5){
+            throw new ValidationException("Tutor já possui 5 adoções efetivadas");
         }
-
     }
 }

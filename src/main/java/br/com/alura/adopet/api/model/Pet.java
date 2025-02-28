@@ -1,13 +1,11 @@
 package br.com.alura.adopet.api.model;
 
 import br.com.alura.adopet.api.dto.petDto.CadastroPetDto;
-import br.com.alura.adopet.api.repository.AbrigoRepository;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @AllArgsConstructor
 @NoArgsConstructor
